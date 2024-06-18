@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
+	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -51,7 +53,7 @@ func newworkerCat(c *mongo.Client) *workerCat {
 }
 
 func (cw *workerCat) start() error {
-	coll := cw.Client.Database("Cats").Collection("fats")
+	coll := cw.Client.Database("Cats").Collection("facts")
 	ticker := time.NewTicker(2 * time.Second)
 	for {
 		resp, err := http.Get("http://catfact.ninja/fact")
@@ -71,7 +73,8 @@ func (cw *workerCat) start() error {
 
 }
 func main() {
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI("mongodb://localhost:27017"))
+	godotenv.Load()
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(os.Getenv("MONGO")))
 	if err != nil {
 		log.Fatal(err)
 	}
