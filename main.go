@@ -84,5 +84,5 @@ func main() {
 
 	server := newServer(client)
 	http.HandleFunc("/cats", server.HandleGetReq)
-	http.ListenAndServe(":3000", nil)
+	http.ListenAndServe(os.Getenv("PORT"), nil)
 }
